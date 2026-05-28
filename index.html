@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diagnóstico Spellix — O Estado Real do Teu Negócio</title>
+  <style>
+    :root {
+      --purple: #2d1b69;
+      --purple-mid: #3d2585;
+      --purple-light: #f5f3fa;
+      --gold: #f0d080;
+      --gold-dark: #c9972e;
+      --white: #ffffff;
+      --text: #1a1a1a;
+      --text-soft: #555555;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--purple);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    /* ── STARS BACKGROUND ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(circle, rgba(240,208,128,0.15) 1px, transparent 1px),
+        radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+      background-size: 60px 60px, 37px 37px;
+      background-position: 0 0, 30px 30px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--white);
+      border-radius: 20px;
+      max-width: 640px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.4);
+    }
+
+    /* ── HEADER ── */
+    .card-header {
+      background: var(--purple);
+      padding: 32px 36px 24px;
+      border-bottom: 3px solid var(--gold);
+      text-align: center;
+    }
+    .brand {
+      font-size: 13px;
+      letter-spacing: 3px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .card-header h1 {
+      color: var(--white);
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .card-header p {
+      color: rgba(255,255,255,0.65);
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    /* ── PROGRESS ── */
+    .progress-wrap {
+      background: var(--purple-light);
+      padding: 16px 36px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .progress-bar-bg {
+      flex: 1;
+      height: 6px;
+      background: #ddd;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--purple), var(--gold-dark));
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+    .progress-label {
+      font-size: 12px;
+      color: var(--text-soft);
+      white-space: nowrap;
+      min-width: 52px;
+      text-align: right;
+    }
+
+    /* ── BODY ── */
+    .card-body {
+      padding: 36px;
+    }
+
+    /* ── SCREEN: INTRO ── */
+    #screen-intro .intro-icon {
+      font-size: 48px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    #screen-intro h2 {
+      font-size: 20px;
+      color: var(--purple);
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    #screen-intro p {
+      color: var(--text-soft);
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+    #screen-intro em {
+      color: var(--purple);
+      font-style: italic;
+      font-weight: 600;
+    }
+    .time-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--purple-light);
+      border-left: 4px solid var(--gold-dark);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-top: 20px;
+      margin-bottom: 28px;
+    }
+
+    /* ── SCREEN: QUESTION ── */
+    .dimension-tag {
+      display: inline-block;
+      background: var(--purple);
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 99px;
+      margin-bottom: 20px;
+    }
+    .question-text {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+    .answers {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .answer-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: var(--purple-light);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 14px 16px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+    .answer-btn:hover {
+      border-color: var(--purple);
+      background: #ede9f8;
+    }
+    .answer-btn.selected {
+      border-color: var(--gold-dark);
+      background: #fff8e8;
+    }
+    .answer-letter {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      background: var(--purple);
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+    .answer-btn.selected .answer-letter {
+      background: var(--gold-dark);
+      color: var(--white);
+    }
+    .answer-text {
+      font-size: 14px;
+      color: var(--text-soft);
+      line-height: 1.55;
+    }
+    .answer-btn.selected .answer-text {
+      color: var(--text);
+    }
+
+    /* ── SCREEN: CONTACT ── */
+    #screen-contact h2 {
+      font-size: 20px;
+      color: var(--purple);
+      margin-bottom: 8px;
+    }
+    #screen-contact p {
+      color: var(--text-soft);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--purple);
+      margin-bottom: 6px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      color: var(--text);
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--purple);
+    }
+
+    /* ── SCREEN: RESULT ── */
+    .result-header {
+      background: var(--purple);
+      margin: -36px -36px 28px;
+      padding: 32px 36px;
+      border-bottom: 3px solid var(--gold);
+    }
+    .result-level-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .result-level-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .result-score-tag {
+      display: inline-block;
+      background: rgba(240,208,128,0.2);
+      color: var(--gold);
+      font-size: 13px;
+      padding: 4px 12px;
+      border-radius: 99px;
+      border: 1px solid rgba(240,208,128,0.4);
+    }
+    .result-tagline {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--purple);
+      margin-bottom: 14px;
+    }
+    .result-narrative {
+      font-size: 14px;
+      color: var(--text-soft);
+      line-height: 1.75;
+      margin-bottom: 20px;
+    }
+    .result-cta-box {
+      background: var(--purple-light);
+      border-left: 4px solid var(--gold-dark);
+      border-radius: 0 10px 10px 0;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+    }
+    .result-cta-box strong {
+      display: block;
+      font-size: 13px;
+      color: var(--purple);
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .result-cta-box p {
+      font-size: 14px;
+      color: var(--text-soft);
+      line-height: 1.6;
+    }
+    .contact-box {
+      background: var(--purple);
+      border-radius: 12px;
+      padding: 20px 24px;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .contact-box p {
+      color: rgba(255,255,255,0.7);
+      font-size: 12px;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .contact-box a {
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ── BUTTONS ── */
+    .btn-primary {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, var(--purple), var(--purple-mid));
+      color: var(--gold);
+      font-size: 16px;
+      font-weight: 700;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: 0.3px;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(45,27,105,0.35);
+    }
+    .btn-primary:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .btn-secondary {
+      display: block;
+      width: 100%;
+      background: transparent;
+      color: var(--text-soft);
+      font-size: 14px;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 10px;
+    }
+    .btn-secondary:hover {
+      border-color: var(--purple);
+      color: var(--purple);
+    }
+
+    /* ── DIMENSION TRANSITION ── */
+    .dim-transition {
+      text-align: center;
+      padding: 8px 0 24px;
+    }
+    .dim-transition .dim-icon { font-size: 36px; margin-bottom: 12px; }
+    .dim-transition h3 { font-size: 18px; color: var(--purple); margin-bottom: 8px; }
+    .dim-transition p { font-size: 14px; color: var(--text-soft); line-height: 1.6; }
+
+    /* ── ANIMATIONS ── */
+    .fade-in {
+      animation: fadeIn 0.35s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── FOOTER ── */
+    .card-footer {
+      padding: 16px 36px;
+      background: var(--purple-light);
+      border-top: 1px solid #e0d8f5;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+    .card-footer span { color: var(--purple); font-weight: 700; }
+
+    @media (max-width: 480px) {
+      .card-body { padding: 24px 20px; }
+      .card-header { padding: 24px 20px 20px; }
+      .progress-wrap { padding: 14px 20px; }
+      .result-header { margin: -24px -20px 24px; padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <!-- HEADER -->
+  <div class="card-header">
+    <div class="brand">✦ Spellix</div>
+    <h1>Diagnóstico — O Estado Real do Teu Negócio</h1>
+    <p>12 perguntas · 5 minutos · resultado imediato</p>
+  </div>
+
+  <!-- PROGRESS (hidden on intro/result) -->
+  <div class="progress-wrap" id="progress-wrap" style="display:none">
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+    <div class="progress-label" id="progress-label">0 / 12</div>
+  </div>
+
+  <!-- BODY -->
+  <div class="card-body">
+
+    <!-- ══ SCREEN: INTRO ══ -->
+    <div id="screen-intro" class="fade-in">
+      <div class="intro-icon">🪄</div>
+      <h2>Antes de Começares</h2>
+      <p>Imagina dois empreendedores. Ambos com o mesmo produto. Ambos com a mesma energia.</p>
+      <p>O primeiro chega ao final do dia exausto — passou horas a responder aos mesmos emails, a procurar ficheiros que sabe que existem algures, a tentar lembrar-se de onde ficou uma proposta que enviou na semana passada.</p>
+      <p>O segundo termina o dia com clareza. Sabe exatamente o que está em aberto, o que foi fechado, o que precisa de atenção. O seu negócio corre mesmo quando ele não está a olhar.</p>
+      <p><em>A diferença entre os dois não é talento. É sistema.</em></p>
+      <div class="time-note">
+        ⏱ Responde como o teu negócio é agora — não como gostarias que fosse. O diagnóstico só funciona com honestidade.
+      </div>
+      <button class="btn-primary" onclick="startQuiz()">Começar o Diagnóstico →</button>
+    </div>
+
+    <!-- ══ SCREEN: QUESTION ══ -->
+    <div id="screen-question" style="display:none"></div>
+
+    <!-- ══ SCREEN: CONTACT ══ -->
+    <div id="screen-contact" style="display:none">
+      <h2>Quase lá ✦</h2>
+      <p>O teu resultado está pronto. Deixa o teu nome e email para receberes o diagnóstico completo — e para podermos ter uma conversa sobre o que encontrámos.</p>
+      <div class="form-group">
+        <label for="input-name">Nome</label>
+        <input type="text" id="input-name" placeholder="O teu nome" />
+      </div>
+      <div class="form-group">
+        <label for="input-email">Email</label>
+        <input type="email" id="input-email" placeholder="o.teu@email.com" />
+      </div>
+      <button class="btn-primary" onclick="submitContact()" id="btn-submit">Ver o meu resultado →</button>
+      <button class="btn-secondary" onclick="skipContact()">Continuar sem email</button>
+    </div>
+
+    <!-- ══ SCREEN: RESULT ══ -->
+    <div id="screen-result" style="display:none"></div>
+
+  </div><!-- /card-body -->
+
+  <div class="card-footer">
+    <span>Spellix</span> · Por fora parece magia. Por dentro é sistema.
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────
+const dimensions = [
+  { id: 1, name: "Tarefas Repetitivas", icon: "⚙️",
+    intro: "Vamos começar pelo que te rouba mais tempo todos os dias: as tarefas que se repetem, que são previsíveis, e que mesmo assim continuam a exigir a tua atenção pessoal." },
+  { id: 2, name: "Centralização de Informação", icon: "🗂️",
+    intro: "Agora vamos falar de algo que raramente aparece nas conversas sobre crescimento, mas que sabota quase todos os negócios: onde vive a informação do teu negócio — e quem consegue acedê-la." },
+  { id: 3, name: "Visibilidade do Negócio", icon: "📊",
+    intro: "Não se gere o que não se vê. Esta dimensão avalia se tens uma perspetiva clara sobre como o teu negócio está a funcionar — ou se tomas decisões com base na intuição." },
+  { id: 4, name: "Seguimento de Oportunidades", icon: "🎯",
+    intro: "A última dimensão é onde a maioria dos negócios perde dinheiro silenciosamente: o seguimento. Não por falta de interesse — por falta de sistema." },
+];
+
+const questions = [
+  // DIM 1
+  { dim: 0, text: "Quando precisas de enviar um documento que já enviaste antes — uma proposta, um recibo, uma confirmação — o que acontece?",
+    answers: [
+      "Procuro o ficheiro original, atualizo manualmente os dados e envio. Acontece com frequência e demora sempre algum tempo.",
+      "Tenho um template mas ainda preciso de preencher vários campos à mão e verificar tudo antes de enviar.",
+      "O processo está quase automatizado — preparo a base e a maior parte preenche-se sozinha.",
+      "É automático. O documento sai com os dados corretos sem eu ter de intervir."
+    ]},
+  { dim: 0, text: "Quando um cliente faz sempre o mesmo tipo de pedido — um agendamento, uma atualização, uma confirmação — como é que isso é tratado?",
+    answers: [
+      "Respondo pessoalmente a cada pedido, mesmo que seja idêntico ao anterior.",
+      "Tenho algumas respostas guardadas mas ainda dependo de mim para enviar e acompanhar.",
+      "Tenho um processo definido mas há etapas manuais que ainda não consegui eliminar.",
+      "O cliente tem uma forma direta de o fazer e o processo corre sem eu ter de intervir."
+    ]},
+  { dim: 0, text: "Se tivesses de tirar duas semanas de férias sem acesso ao email, o que aconteceria às tarefas do dia-a-dia?",
+    answers: [
+      "Tudo pararia ou ficaria atrasado — o negócio depende da minha presença para as coisas mais básicas.",
+      "Algumas coisas continuariam mas muita coisa ficaria em espera até eu voltar.",
+      "A maioria correria mas haveria sempre algumas situações que precisariam da minha intervenção.",
+      "O negócio continuaria sem problemas — tenho processos e sistemas que não dependem de mim."
+    ]},
+  // DIM 2
+  { dim: 1, text: "Se um colaborador ou parceiro precisasse de perceber o estado atual de um cliente sem te perguntar, conseguia fazê-lo?",
+    answers: [
+      "Não — a informação está toda na minha cabeça ou dispersa por emails e conversas.",
+      "Conseguia encontrar algumas coisas mas não teria o quadro completo sem me perguntar.",
+      "Temos alguma informação registada mas não é consistente nem atualizada regularmente.",
+      "Sim — temos um registo claro e qualquer pessoa consegue perceber o estado de cada cliente."
+    ]},
+  { dim: 1, text: "Quando queres perceber como correu o mês — quantas propostas enviaste, quantas converteram, onde perdeste negócio — como obténs essa informação?",
+    answers: [
+      "Tenho de ir buscar essa informação a vários sítios ou reconstruir manualmente o que aconteceu.",
+      "Tenho alguns registos mas são incompletos — fico com uma ideia aproximada mas não com os números exatos.",
+      "Tenho um sistema mas ainda preciso de algum trabalho manual para consolidar os dados.",
+      "Tenho acesso imediato a esses números — está tudo registado e fácil de consultar."
+    ]},
+  { dim: 1, text: "Quando uma tarefa importante não foi feita a tempo, como é que te apercebes disso?",
+    answers: [
+      "Normalmente só me apercebo quando já é tarde — o cliente pergunta, a situação escala.",
+      "Tenho algumas formas de controlo mas não são sistemáticas — depende de eu me lembrar.",
+      "Tenho um sistema de alertas mas não é perfeito — algumas coisas ainda me passam ao lado.",
+      "O sistema avisa-me antes de se tornar um problema — não preciso de estar a verificar manualmente."
+    ]},
+  // DIM 3
+  { dim: 2, text: "Se alguém te perguntar hoje qual foi o teu cliente mais rentável nos últimos seis meses, o que fazes?",
+    answers: [
+      "Não tenho como saber — teria de reconstruir tudo manualmente e mesmo assim não teria a certeza.",
+      "Tenho uma ideia mas não consigo confirmar com números — é uma perceção, não um facto.",
+      "Consigo chegar lá mas demora algum tempo a consolidar a informação.",
+      "Sei de imediato — tenho esses dados disponíveis e atualizados."
+    ]},
+  { dim: 2, text: "Quando precisas de tomar uma decisão importante no negócio — contratar, investir, mudar preço — com base em que informação decides?",
+    answers: [
+      "Principalmente pela intuição e pelo que me parece certo naquele momento.",
+      "Tenho alguma informação mas é incompleta — decido com o que tenho disponível.",
+      "Tenho dados para a maioria das decisões mas há áreas onde ainda me falta visibilidade.",
+      "Decido com base em dados concretos — tenho a informação que preciso quando preciso."
+    ]},
+  { dim: 2, text: "Com que frequência tens uma visão clara do que está a acontecer no teu negócio sem teres de ir buscar essa informação ativamente?",
+    answers: [
+      "Raramente — tenho de parar tudo e fazer esse exercício quando preciso de perceber onde estou.",
+      "Algumas vezes — tenho pontos de controlo mas não é uma visão contínua.",
+      "Com regularidade — tenho um ritual semanal ou mensal que me dá essa perspetiva.",
+      "Sempre — tenho visibilidade em tempo real sobre as métricas que mais importam."
+    ]},
+  // DIM 4
+  { dim: 3, text: "Quando alguém te pede uma proposta ou demonstra interesse no teu serviço, o que acontece nos dias seguintes?",
+    answers: [
+      "Depende — se me lembro, faço um seguimento. Muitas vezes as coisas ficam esquecidas.",
+      "Tenho o hábito de fazer seguimento mas é manual — depende de mim lembrar-me ou de ter uma nota.",
+      "Tenho um processo mas não é consistente — algumas oportunidades ficam a perder.",
+      "O seguimento é automático ou sistemático — nenhuma oportunidade fica sem resposta."
+    ]},
+  { dim: 3, text: "Se quisesses saber quantas propostas tens em aberto neste momento e qual o estado de cada uma, o que farias?",
+    answers: [
+      "Não tenho essa informação organizada — teria de ir ao email ou à memória.",
+      "Tenho algum registo mas não está completo nem atualizado.",
+      "Tenho um sistema mas preciso de o atualizar manualmente com alguma regularidade.",
+      "Sei de imediato — tenho um pipeline claro e atualizado que me dá esse quadro."
+    ]},
+  { dim: 3, text: "Quando um cliente que não fechou há três meses te volta a contactar, como é que essa situação é tratada?",
+    answers: [
+      "Não tenho forma de saber que estava em aberto — o contacto chega-me como se fosse novo.",
+      "Lembro-me de alguns casos mas não tenho um registo sistemático do que estava pendente.",
+      "Tenho algum controlo mas depende de eu rever regularmente o que ficou em espera.",
+      "O sistema identifica automaticamente esse historial e tenho o contexto completo antes de responder."
+    ]},
+];
+
+const levels = [
+  { min: 12, max: 20,
+    name: "Negócio Sem Truque",
+    tagline: "O negócio vive em ti",
+    narrative: "O teu negócio funciona — mas funciona porque tu estás lá. O problema não é a tua dedicação, é que essa dedicação não tem onde pousar. Não há sistema que guarde o que sabes, que avise o que está pendente ou que trate do que é previsível. Cada dia começa do zero. Cada tarefa repetitiva depende de te lembrares. Isso não é um problema de gestão — é um problema de estrutura. E a boa notícia é que a estrutura resolve-se.",
+    cta: "Vamos identificar os três pontos onde um sistema simples teria o maior impacto imediato — e construir a partir daí."
+  },
+  { min: 21, max: 30,
+    name: "Negócio a Aperfeiçoar o Truque",
+    tagline: "As peças existem, mas não encaixam",
+    narrative: "Já tomaste algumas decisões certas. Tens ferramentas, tens alguns processos, tens hábitos que funcionam — mas o conjunto ainda não é um sistema. Há gaps que dependem de memória e boa vontade. Há informação que fica a perder entre uma ferramenta e outra. Há oportunidades que ficam esquecidas não por descuido, mas porque o processo não está desenhado para as capturar. Estes negócios crescem — mas crescem com atrito.",
+    cta: "Auditamos o que já tens, identificamos o que falta, e ligamos as peças que ainda estão soltas."
+  },
+  { min: 31, max: 40,
+    name: "Negócio em Ensaio",
+    tagline: "O sistema existe — falta polir a execução",
+    narrative: "O teu negócio tem uma estrutura sólida. Tens processos definidos, informação organizada, e uma perspetiva razoável do que está a acontecer. O que te falta não é arquitetura — é precisão. Há tarefas que ainda te passam pelas mãos quando não precisavam. Há dados que existem mas que não estão a ser usados para decidir melhor. Estás próximo do patamar onde o negócio corre com verdadeira autonomia.",
+    cta: "Mapeamos o que está a funcionar bem e identificamos os pontos onde a automação te daria o maior retorno."
+  },
+  { min: 41, max: 48,
+    name: "Negócio com Truque Perfeito",
+    tagline: "O sistema trabalha enquanto tu decides",
+    narrative: "O teu negócio tem algo que a maioria nunca chega a ter: autonomia operacional. Os processos correntes não dependem da tua atenção constante. A informação está onde precisa de estar. As oportunidades não se perdem por falta de seguimento. Podes focar a tua energia onde realmente importa — na estratégia, nos clientes, no crescimento. Isso não acontece por acaso. Acontece porque construíste algo que funciona.",
+    cta: "Mesmo os sistemas mais robustos evoluem. Se queres perceber como manter esta estrutura à medida que o negócio cresce, estamos disponíveis para uma conversa."
+  },
+];
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let currentQ = 0;
+let answers = [];
+let showingDimIntro = false;
+let score = 0;
+
+// ─────────────────────────────────────────────
+// LOGIC
+// ─────────────────────────────────────────────
+function startQuiz() {
+  show('screen-question');
+  hide('screen-intro');
+  document.getElementById('progress-wrap').style.display = 'flex';
+  showDimTransition(0);
+}
+
+function showDimTransition(dimIdx) {
+  showingDimIntro = true;
+  const dim = dimensions[dimIdx];
+  const el = document.getElementById('screen-question');
+  el.innerHTML = `
+    <div class="dim-transition fade-in">
+      <div class="dim-icon">${dim.icon}</div>
+      <h3>Dimensão ${dim.id} — ${dim.name}</h3>
+      <p>${dim.intro}</p>
+    </div>
+    <button class="btn-primary" style="margin-top:24px" onclick="showQuestion()">Continuar →</button>
+  `;
+  updateProgress();
+}
+
+function showQuestion() {
+  showingDimIntro = false;
+  if (currentQ >= questions.length) {
+    goToContact();
+    return;
+  }
+  const q = questions[currentQ];
+  const letters = ['A', 'B', 'C', 'D'];
+  const el = document.getElementById('screen-question');
+  el.innerHTML = `
+    <div class="fade-in">
+      <div class="dimension-tag">${dimensions[q.dim].icon} ${dimensions[q.dim].name}</div>
+      <div class="question-text">${currentQ + 1}. ${q.text}</div>
+      <div class="answers" id="answers-wrap">
+        ${q.answers.map((a, i) => `
+          <button class="answer-btn" onclick="selectAnswer(${i})" id="ans-${i}">
+            <div class="answer-letter">${letters[i]}</div>
+            <div class="answer-text">${a}</div>
+          </button>
+        `).join('')}
+      </div>
+      <button class="btn-primary" id="btn-next" style="margin-top:24px" disabled onclick="nextQuestion()">Próxima →</button>
+    </div>
+  `;
+  updateProgress();
+}
+
+function selectAnswer(idx) {
+  // Clear previous selection
+  [0,1,2,3].forEach(i => {
+    const btn = document.getElementById('ans-' + i);
+    if (btn) btn.classList.remove('selected');
+  });
+  document.getElementById('ans-' + idx).classList.add('selected');
+  answers[currentQ] = idx + 1; // 1-4
+  document.getElementById('btn-next').disabled = false;
+}
+
+function nextQuestion() {
+  currentQ++;
+  // Check if crossing dimension boundary
+  if (currentQ < questions.length) {
+    const prevDim = questions[currentQ - 1].dim;
+    const nextDim = questions[currentQ].dim;
+    if (nextDim !== prevDim) {
+      showDimTransition(nextDim);
+      return;
+    }
+  }
+  if (currentQ >= questions.length) {
+    goToContact();
+    return;
+  }
+  showQuestion();
+}
+
+function updateProgress() {
+  const pct = Math.round((currentQ / questions.length) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = currentQ + ' / ' + questions.length;
+}
+
+function goToContact() {
+  score = answers.reduce((a, b) => a + b, 0);
+  show('screen-contact');
+  hide('screen-question');
+  document.getElementById('progress-wrap').style.display = 'none';
+}
+
+function submitContact() {
+  const name = document.getElementById('input-name').value.trim();
+  const email = document.getElementById('input-email').value.trim();
+  if (!name) { document.getElementById('input-name').focus(); return; }
+  if (!email || !email.includes('@')) { document.getElementById('input-email').focus(); return; }
+  showResult(name, email);
+}
+
+function skipContact() {
+  showResult('', '');
+}
+
+function showResult(name, email) {
+  const level = levels.find(l => score >= l.min && score <= l.max);
+  hide('screen-contact');
+  const el = document.getElementById('screen-result');
+  const greeting = name ? `<p style="color:var(--text-soft);font-size:14px;margin-bottom:16px">Obrigado, <strong>${name}</strong>. Aqui está o teu diagnóstico.</p>` : '';
+  el.innerHTML = `
+    <div class="fade-in">
+      <div class="result-header">
+        <div class="result-level-label">O teu nível</div>
+        <div class="result-level-name">${level.name}</div>
+        <div class="result-score-tag">${score} pontos</div>
+      </div>
+      ${greeting}
+      <div class="result-tagline">${level.tagline}</div>
+      <div class="result-narrative">${level.narrative}</div>
+      <div class="result-cta-box">
+        <strong>O que fazer a seguir</strong>
+        <p>${level.cta}</p>
+      </div>
+      <div class="contact-box">
+        <p>Fala connosco</p>
+        <a href="mailto:diogoserrario@gmail.com">diogoserrario@gmail.com</a>
+        <a href="tel:+351912517763">912 517 763</a>
+      </div>
+    </div>
+  `;
+  show('screen-result');
+}
+
+// ─────────────────────────────────────────────
+// UTILS
+// ─────────────────────────────────────────────
+function show(id) {
+  const el = document.getElementById(id);
+  el.style.display = 'block';
+  el.classList.remove('fade-in');
+  void el.offsetWidth;
+  el.classList.add('fade-in');
+}
+function hide(id) {
+  document.getElementById(id).style.display = 'none';
+}
+</script>
+</body>
+</html>
