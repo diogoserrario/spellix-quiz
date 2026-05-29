@@ -305,10 +305,8 @@
       margin-bottom: 20px;
     }
     .result-cta-box {
-      background: var(--purple-light);
-      border-left: 4px solid var(--gold-dark);
-      border-radius: 0 10px 10px 0;
-      padding: 16px 20px;
+      background: transparent;
+      padding: 0;
       margin-bottom: 28px;
     }
     .result-cta-box strong {
@@ -321,9 +319,11 @@
       letter-spacing: 0.5px;
     }
     .result-cta-box p {
-      font-size: 14px;
-      color: var(--text-soft);
+      font-size: 16px;
+      color: var(--purple);
       line-height: 1.6;
+      font-weight: 700;
+      font-style: italic;
     }
     .contact-box {
       background: var(--purple);
@@ -434,8 +434,8 @@
   <!-- HEADER -->
   <div class="card-header">
     <div class="brand">✦ Spellix</div>
-    <h1>Diagnóstico — O Estado Real do Teu Negócio</h1>
-    <p>12 perguntas · 5 minutos · resultado imediato</p>
+    <h1>Diagnóstico: O Estado Real do Teu Negócio</h1>
+    <p>Por fora parece magia. Por dentro é sistema.</p>
   </div>
 
   <!-- PROGRESS (hidden on intro/result) -->
@@ -451,45 +451,20 @@
 
     <!-- ══ SCREEN: INTRO ══ -->
     <div id="screen-intro" class="fade-in">
-      <div class="intro-icon">🪄</div>
-      <h2>Antes de Começares</h2>
-      <p>Imagina dois empreendedores. Ambos com o mesmo produto. Ambos com a mesma energia.</p>
-      <p>O primeiro chega ao final do dia exausto — passou horas a responder aos mesmos emails, a procurar ficheiros que sabe que existem algures, a tentar lembrar-se de onde ficou uma proposta que enviou na semana passada.</p>
-      <p>O segundo termina o dia com clareza. Sabe exatamente o que está em aberto, o que foi fechado, o que precisa de atenção. O seu negócio corre mesmo quando ele não está a olhar.</p>
-      <p><em>A diferença entre os dois não é talento. É sistema.</em></p>
-      <div class="time-note">
-        ⏱ Responde como o teu negócio é agora — não como gostarias que fosse. O diagnóstico só funciona com honestidade.
-      </div>
-      <button class="btn-primary" onclick="startQuiz()">Começar o Diagnóstico →</button>
+      <p style="color:var(--text-soft);font-size:14px;margin-bottom:28px">Responde com base em como o teu negócio é hoje, não em como gostarias que fosse.</p>
+      <button class="btn-primary" onclick="startQuiz()">Começar →</button>
     </div>
 
     <!-- ══ SCREEN: QUESTION ══ -->
     <div id="screen-question" style="display:none"></div>
 
-    <!-- ══ SCREEN: CONTACT ══ -->
-    <div id="screen-contact" style="display:none">
-      <h2>Quase lá ✦</h2>
-      <p>O teu resultado está pronto. Deixa o teu nome e email para receberes o diagnóstico completo — e para podermos ter uma conversa sobre o que encontrámos.</p>
-      <div class="form-group">
-        <label for="input-name">Nome</label>
-        <input type="text" id="input-name" placeholder="O teu nome" />
-      </div>
-      <div class="form-group">
-        <label for="input-email">Email</label>
-        <input type="email" id="input-email" placeholder="o.teu@email.com" />
-      </div>
-      <button class="btn-primary" onclick="submitContact()" id="btn-submit">Ver o meu resultado →</button>
-      <button class="btn-secondary" onclick="skipContact()">Continuar sem email</button>
-    </div>
+    <!-- ══ SCREEN: CONTACT removed ══ -->
 
     <!-- ══ SCREEN: RESULT ══ -->
     <div id="screen-result" style="display:none"></div>
 
   </div><!-- /card-body -->
 
-  <div class="card-footer">
-    <span>Spellix</span> · Por fora parece magia. Por dentro é sistema.
-  </div>
 </div>
 
 <script>
@@ -497,131 +472,131 @@
 // DATA
 // ─────────────────────────────────────────────
 const dimensions = [
-  { id: 1, name: "Tarefas Repetitivas", icon: "⚙️",
-    intro: "Vamos começar pelo que te rouba mais tempo todos os dias: as tarefas que se repetem, que são previsíveis, e que mesmo assim continuam a exigir a tua atenção pessoal." },
-  { id: 2, name: "Centralização de Informação", icon: "🗂️",
-    intro: "Agora vamos falar de algo que raramente aparece nas conversas sobre crescimento, mas que sabota quase todos os negócios: onde vive a informação do teu negócio — e quem consegue acedê-la." },
-  { id: 3, name: "Visibilidade do Negócio", icon: "📊",
-    intro: "Não se gere o que não se vê. Esta dimensão avalia se tens uma perspetiva clara sobre como o teu negócio está a funcionar — ou se tomas decisões com base na intuição." },
-  { id: 4, name: "Seguimento de Oportunidades", icon: "🎯",
-    intro: "A última dimensão é onde a maioria dos negócios perde dinheiro silenciosamente: o seguimento. Não por falta de interesse — por falta de sistema." },
+  { id: 1, name: "Tarefas Repetitivas", icon: "⚙️", intro: "" },
+  { id: 2, name: "Centralização de Informação", icon: "🗂️", intro: "" },
+  { id: 3, name: "Visibilidade do Negócio", icon: "📊", intro: "" },
+  { id: 4, name: "Autonomia Operacional", icon: "🎯", intro: "" },
 ];
 
 const questions = [
   // DIM 1
-  { dim: 0, text: "Quando precisas de enviar um documento que já enviaste antes — uma proposta, um recibo, uma confirmação — o que acontece?",
+  { dim: 0, text: "Quando tens uma tarefa que já fizeste antes, enviar uma proposta, criar um relatório, atualizar um registo, o que acontece?",
     answers: [
-      "Procuro o ficheiro original, atualizo manualmente os dados e envio. Acontece com frequência e demora sempre algum tempo.",
-      "Tenho um template mas ainda preciso de preencher vários campos à mão e verificar tudo antes de enviar.",
-      "O processo está quase automatizado — preparo a base e a maior parte preenche-se sozinha.",
-      "É automático. O documento sai com os dados corretos sem eu ter de intervir."
+      "Faço sempre do zero, passo a passo, como se fosse a primeira vez.",
+      "Tenho alguns atalhos mas ainda demora e depende de mim.",
+      "A maior parte está simplificada mas há sempre algo manual no meio.",
+      "É automático ou delegado. Não preciso de intervir."
     ]},
-  { dim: 0, text: "Quando um cliente faz sempre o mesmo tipo de pedido — um agendamento, uma atualização, uma confirmação — como é que isso é tratado?",
+  { dim: 0, text: "Quantos emails por dia ficam sem resposta porque não tiveste tempo ou te esqueceste?",
     answers: [
-      "Respondo pessoalmente a cada pedido, mesmo que seja idêntico ao anterior.",
-      "Tenho algumas respostas guardadas mas ainda dependo de mim para enviar e acompanhar.",
-      "Tenho um processo definido mas há etapas manuais que ainda não consegui eliminar.",
-      "O cliente tem uma forma direta de o fazer e o processo corre sem eu ter de intervir."
+      "Mais de 10. Perco o fio com frequência.",
+      "Entre 5 a 10. Há sempre algo que fica para trás.",
+      "Entre 1 a 5. Acontece mas consigo recuperar.",
+      "Nenhum. Tenho um sistema que garante que nada fica perdido."
     ]},
-  { dim: 0, text: "Se tivesses de tirar duas semanas de férias sem acesso ao email, o que aconteceria às tarefas do dia-a-dia?",
+  { dim: 0, text: "Quantas horas por semana gastas em trabalho que se repete sempre da mesma forma?",
     answers: [
-      "Tudo pararia ou ficaria atrasado — o negócio depende da minha presença para as coisas mais básicas.",
-      "Algumas coisas continuariam mas muita coisa ficaria em espera até eu voltar.",
-      "A maioria correria mas haveria sempre algumas situações que precisariam da minha intervenção.",
-      "O negócio continuaria sem problemas — tenho processos e sistemas que não dependem de mim."
+      "Mais de 10h.",
+      "Entre 5h e 10h.",
+      "Entre 1h e 5h.",
+      "Menos de 1h. Está automatizado ou eliminado."
     ]},
   // DIM 2
-  { dim: 1, text: "Se um colaborador ou parceiro precisasse de perceber o estado atual de um cliente sem te perguntar, conseguia fazê-lo?",
+  { dim: 1, text: "Se alguém da tua equipa precisasse de perceber o estado atual de um projeto ou cliente, sem te perguntar, conseguia?",
     answers: [
-      "Não — a informação está toda na minha cabeça ou dispersa por emails e conversas.",
-      "Conseguia encontrar algumas coisas mas não teria o quadro completo sem me perguntar.",
-      "Temos alguma informação registada mas não é consistente nem atualizada regularmente.",
-      "Sim — temos um registo claro e qualquer pessoa consegue perceber o estado de cada cliente."
+      "Não. A informação está na minha cabeça ou dispersa por vários sítios.",
+      "Conseguia encontrar algumas coisas mas não teria o quadro completo.",
+      "Temos registos mas não são consistentes nem atualizados.",
+      "Sim. Está tudo num só sítio, claro e acessível."
     ]},
-  { dim: 1, text: "Quando queres perceber como correu o mês — quantas propostas enviaste, quantas converteram, onde perdeste negócio — como obténs essa informação?",
+  { dim: 1, text: "Quando precisas de tomar uma decisão importante, aceitar um projeto, negociar um preço, contratar alguém, tens o contexto que precisas disponível?",
     answers: [
-      "Tenho de ir buscar essa informação a vários sítios ou reconstruir manualmente o que aconteceu.",
-      "Tenho alguns registos mas são incompletos — fico com uma ideia aproximada mas não com os números exatos.",
-      "Tenho um sistema mas ainda preciso de algum trabalho manual para consolidar os dados.",
-      "Tenho acesso imediato a esses números — está tudo registado e fácil de consultar."
+      "Não. Tenho de ir buscar contexto a vários sítios: email, ficheiros, memória.",
+      "Tenho algum contexto mas demora a consolidar.",
+      "Tenho a maior parte do contexto acessível mas falta sempre qualquer coisa.",
+      "Sim. O contexto está disponível de imediato, atualizado e no sítio certo."
     ]},
-  { dim: 1, text: "Quando uma tarefa importante não foi feita a tempo, como é que te apercebes disso?",
+  { dim: 1, text: "Com que frequência perdes tempo à procura de uma fatura, uma despesa, um ficheiro ou um follow-up que sabes que existe mas não sabes onde está?",
     answers: [
-      "Normalmente só me apercebo quando já é tarde — o cliente pergunta, a situação escala.",
-      "Tenho algumas formas de controlo mas não são sistemáticas — depende de eu me lembrar.",
-      "Tenho um sistema de alertas mas não é perfeito — algumas coisas ainda me passam ao lado.",
-      "O sistema avisa-me antes de se tornar um problema — não preciso de estar a verificar manualmente."
+      "Todos os dias.",
+      "3 a 4 vezes por semana.",
+      "1 a 2 vezes por semana.",
+      "Raramente ou nunca. Sei sempre onde está tudo."
     ]},
   // DIM 3
-  { dim: 2, text: "Se alguém te perguntar hoje qual foi o teu cliente mais rentável nos últimos seis meses, o que fazes?",
+  { dim: 2, text: "Sem consultares nada, consegues dizer agora qual foi o mês mais forte do teu negócio nos últimos seis meses?",
     answers: [
-      "Não tenho como saber — teria de reconstruir tudo manualmente e mesmo assim não teria a certeza.",
-      "Tenho uma ideia mas não consigo confirmar com números — é uma perceção, não um facto.",
-      "Consigo chegar lá mas demora algum tempo a consolidar a informação.",
-      "Sei de imediato — tenho esses dados disponíveis e atualizados."
+      "Não. Não tenho essa informação organizada.",
+      "Tenho uma ideia mas não consigo confirmar com números.",
+      "Consigo chegar lá mas demora algum tempo.",
+      "Sei de imediato. Tenho esses dados disponíveis e atualizados."
     ]},
-  { dim: 2, text: "Quando precisas de tomar uma decisão importante no negócio — contratar, investir, mudar preço — com base em que informação decides?",
+  { dim: 2, text: "Com que base tomas as decisões mais importantes do teu negócio, entrar num novo mercado, ajustar preços, parar um serviço?",
     answers: [
-      "Principalmente pela intuição e pelo que me parece certo naquele momento.",
-      "Tenho alguma informação mas é incompleta — decido com o que tenho disponível.",
-      "Tenho dados para a maioria das decisões mas há áreas onde ainda me falta visibilidade.",
-      "Decido com base em dados concretos — tenho a informação que preciso quando preciso."
+      "Principalmente pela intuição e pelo que me parece certo.",
+      "Tenho alguma informação mas é incompleta.",
+      "Tenho dados para a maioria das decisões mas há áreas sem visibilidade.",
+      "Decido com base em dados concretos. Tenho o que preciso quando preciso."
     ]},
-  { dim: 2, text: "Com que frequência tens uma visão clara do que está a acontecer no teu negócio sem teres de ir buscar essa informação ativamente?",
+  { dim: 2, text: "Se alguém te perguntasse agora \"como está o cash-flow do teu negócio?\", o que respondias?",
     answers: [
-      "Raramente — tenho de parar tudo e fazer esse exercício quando preciso de perceber onde estou.",
-      "Algumas vezes — tenho pontos de controlo mas não é uma visão contínua.",
-      "Com regularidade — tenho um ritual semanal ou mensal que me dá essa perspetiva.",
-      "Sempre — tenho visibilidade em tempo real sobre as métricas que mais importam."
+      "Dava uma resposta vaga. Não sei ao certo como está.",
+      "Respondia com base no que me lembro das últimas semanas.",
+      "Tinha uma perspetiva razoável mas com lacunas.",
+      "Respondia com números. Sei exatamente como está."
     ]},
   // DIM 4
-  { dim: 3, text: "Quando alguém te pede uma proposta ou demonstra interesse no teu serviço, o que acontece nos dias seguintes?",
+  { dim: 3, text: "O que acontece ao teu negócio quando estás de férias uma semana, sem verificar email e sem estar disponível?",
     answers: [
-      "Depende — se me lembro, faço um seguimento. Muitas vezes as coisas ficam esquecidas.",
-      "Tenho o hábito de fazer seguimento mas é manual — depende de mim lembrar-me ou de ter uma nota.",
-      "Tenho um processo mas não é consistente — algumas oportunidades ficam a perder.",
-      "O seguimento é automático ou sistemático — nenhuma oportunidade fica sem resposta."
+      "Para ou atrasa significativamente. Tudo depende de mim.",
+      "Algumas coisas continuam mas há sempre situações que precisam de mim.",
+      "A maioria corre mas há sempre algo que só eu consigo resolver.",
+      "Corre normalmente. Tenho processos e pessoas que não dependem da minha presença."
     ]},
-  { dim: 3, text: "Se quisesses saber quantas propostas tens em aberto neste momento e qual o estado de cada uma, o que farias?",
+  { dim: 3, text: "Se quisesses integrar uma pessoa nova na equipa esta semana, colaborador, freelancer, parceiro, quanto tempo levaria a estar operacional?",
     answers: [
-      "Não tenho essa informação organizada — teria de ir ao email ou à memória.",
-      "Tenho algum registo mas não está completo nem atualizado.",
-      "Tenho um sistema mas preciso de o atualizar manualmente com alguma regularidade.",
-      "Sei de imediato — tenho um pipeline claro e atualizado que me dá esse quadro."
+      "Semanas. O conhecimento está todo na cabeça das pessoas.",
+      "Alguns dias com muita ajuda. Não há grande documentação.",
+      "Relativamente rápido mas ainda falta sistematizar algumas coisas.",
+      "Rapidamente. Temos processos documentados e sistemas que qualquer um aprende."
     ]},
-  { dim: 3, text: "Quando um cliente que não fechou há três meses te volta a contactar, como é que essa situação é tratada?",
+  { dim: 3, text: "Quando sais do escritório ao final do dia, como te sentes em relação ao negócio?",
     answers: [
-      "Não tenho forma de saber que estava em aberto — o contacto chega-me como se fosse novo.",
-      "Lembro-me de alguns casos mas não tenho um registo sistemático do que estava pendente.",
-      "Tenho algum controlo mas depende de eu rever regularmente o que ficou em espera.",
-      "O sistema identifica automaticamente esse historial e tenho o contexto completo antes de responder."
+      "Ansioso. Sei que há coisas que só eu sei e que podem correr mal.",
+      "Preocupado com alguns pontos que ficaram em aberto.",
+      "Razoavelmente tranquilo mas com algumas reservas.",
+      "Tranquilo. O negócio funciona mesmo quando não estou a olhar."
     ]},
 ];
 
 const levels = [
   { min: 12, max: 20,
-    name: "Negócio Sem Truque",
-    tagline: "O negócio vive em ti",
-    narrative: "O teu negócio funciona — mas funciona porque tu estás lá. O problema não é a tua dedicação, é que essa dedicação não tem onde pousar. Não há sistema que guarde o que sabes, que avise o que está pendente ou que trate do que é previsível. Cada dia começa do zero. Cada tarefa repetitiva depende de te lembrares. Isso não é um problema de gestão — é um problema de estrutura. E a boa notícia é que a estrutura resolve-se.",
-    cta: "Vamos identificar os três pontos onde um sistema simples teria o maior impacto imediato — e construir a partir daí."
+    name: "Negócio Dependente",
+    color: "#e03e3e",
+    tagline: "O negócio funciona porque tu estás lá.",
+    narrative: "Não há sistema que guarde o que sabes, que avise o que está pendente ou que trate do que é previsível. Cada dia começa do zero. Isso não é um problema de gestão: é um problema de estrutura.",
+    cta: "Marca uma chamada de 30 minutos. Saís com a mudança de maior impacto para o teu negócio."
   },
   { min: 21, max: 30,
-    name: "Negócio a Aperfeiçoar o Truque",
-    tagline: "As peças existem, mas não encaixam",
-    narrative: "Já tomaste algumas decisões certas. Tens ferramentas, tens alguns processos, tens hábitos que funcionam — mas o conjunto ainda não é um sistema. Há gaps que dependem de memória e boa vontade. Há informação que fica a perder entre uma ferramenta e outra. Há oportunidades que ficam esquecidas não por descuido, mas porque o processo não está desenhado para as capturar. Estes negócios crescem — mas crescem com atrito.",
-    cta: "Auditamos o que já tens, identificamos o que falta, e ligamos as peças que ainda estão soltas."
+    name: "Negócio em Desenvolvimento",
+    color: "#e07b3e",
+    tagline: "As peças existem, mas não encaixam.",
+    narrative: "Tens ferramentas, tens processos, tens hábitos que funcionam. Mas o conjunto ainda não é um sistema. Há oportunidades que se perdem não por descuido, mas porque o processo não está desenhado para as capturar.",
+    cta: "Numa sessão de auditoria, ligamos o que já tens e propomos correções onde o negócio perde dinheiro."
   },
   { min: 31, max: 40,
-    name: "Negócio em Ensaio",
-    tagline: "O sistema existe — falta polir a execução",
-    narrative: "O teu negócio tem uma estrutura sólida. Tens processos definidos, informação organizada, e uma perspetiva razoável do que está a acontecer. O que te falta não é arquitetura — é precisão. Há tarefas que ainda te passam pelas mãos quando não precisavam. Há dados que existem mas que não estão a ser usados para decidir melhor. Estás próximo do patamar onde o negócio corre com verdadeira autonomia.",
-    cta: "Mapeamos o que está a funcionar bem e identificamos os pontos onde a automação te daria o maior retorno."
+    name: "Negócio Estruturado",
+    color: "#d4a017",
+    tagline: "O sistema existe. Falta precisão.",
+    narrative: "Tens a base. O que te falta é aproveitar o que já existe. Os dados estão lá mas não estão a trabalhar para ti. Há decisões que tomas com metade da informação e nem sabes quais são.",
+    cta: "Mostramos-te o que os teus dados já dizem mas ainda não estás a usar."
   },
   { min: 41, max: 48,
-    name: "Negócio com Truque Perfeito",
-    tagline: "O sistema trabalha enquanto tu decides",
-    narrative: "O teu negócio tem algo que a maioria nunca chega a ter: autonomia operacional. Os processos correntes não dependem da tua atenção constante. A informação está onde precisa de estar. As oportunidades não se perdem por falta de seguimento. Podes focar a tua energia onde realmente importa — na estratégia, nos clientes, no crescimento. Isso não acontece por acaso. Acontece porque construíste algo que funciona.",
-    cta: "Mesmo os sistemas mais robustos evoluem. Se queres perceber como manter esta estrutura à medida que o negócio cresce, estamos disponíveis para uma conversa."
+    name: "Negócio Autónomo",
+    color: "#2e7d32",
+    tagline: "O sistema trabalha enquanto tu decides.",
+    narrative: "Construíste algo que a maioria nunca chega a ter. O negócio corre, a informação está organizada e as oportunidades não se perdem. A questão agora não é corrigir: é até onde consegues levar isto.",
+    cta: "Se tens ambição de escalar, faz sentido conversar. Mostramos-te o que os negócios no teu nível fazem a seguir."
   },
 ];
 
@@ -644,18 +619,7 @@ function startQuiz() {
 }
 
 function showDimTransition(dimIdx) {
-  showingDimIntro = true;
-  const dim = dimensions[dimIdx];
-  const el = document.getElementById('screen-question');
-  el.innerHTML = `
-    <div class="dim-transition fade-in">
-      <div class="dim-icon">${dim.icon}</div>
-      <h3>Dimensão ${dim.id} — ${dim.name}</h3>
-      <p>${dim.intro}</p>
-    </div>
-    <button class="btn-primary" style="margin-top:24px" onclick="showQuestion()">Continuar →</button>
-  `;
-  updateProgress();
+  showQuestion();
 }
 
 function showQuestion() {
@@ -679,9 +643,19 @@ function showQuestion() {
           </button>
         `).join('')}
       </div>
-      <button class="btn-primary" id="btn-next" style="margin-top:24px" disabled onclick="nextQuestion()">Próxima →</button>
+      <div style="display:flex;gap:12px;margin-top:24px;align-items:center">
+        ${currentQ > 0 ? `<button class="btn-secondary" onclick="prevQuestion()">← Voltar</button>` : ''}
+        <button class="btn-primary" id="btn-next" style="flex:1" disabled onclick="nextQuestion()">Próxima →</button>
+      </div>
     </div>
   `;
+  // restore previous answer selection if exists
+  if (answers[currentQ] !== undefined) {
+    const idx = answers[currentQ] - 1;
+    const btn = document.getElementById('ans-' + idx);
+    if (btn) btn.classList.add('selected');
+    document.getElementById('btn-next').disabled = false;
+  }
   updateProgress();
 }
 
@@ -694,6 +668,13 @@ function selectAnswer(idx) {
   document.getElementById('ans-' + idx).classList.add('selected');
   answers[currentQ] = idx + 1; // 1-4
   document.getElementById('btn-next').disabled = false;
+}
+
+function prevQuestion() {
+  if (currentQ > 0) {
+    currentQ--;
+    showQuestion();
+  }
 }
 
 function nextQuestion() {
@@ -722,50 +703,56 @@ function updateProgress() {
 
 function goToContact() {
   score = answers.reduce((a, b) => a + b, 0);
-  show('screen-contact');
   hide('screen-question');
   document.getElementById('progress-wrap').style.display = 'none';
+  showResult();
 }
 
-function submitContact() {
-  const name = document.getElementById('input-name').value.trim();
-  const email = document.getElementById('input-email').value.trim();
-  if (!name) { document.getElementById('input-name').focus(); return; }
-  if (!email || !email.includes('@')) { document.getElementById('input-email').focus(); return; }
-  showResult(name, email);
-}
-
-function skipContact() {
-  showResult('', '');
-}
-
-function showResult(name, email) {
+function showResult() {
   const level = levels.find(l => score >= l.min && score <= l.max);
-  hide('screen-contact');
+  const pct = Math.round((score / 48) * 100);
+  document.querySelector('.card-header').style.borderBottomColor = level.color;
   const el = document.getElementById('screen-result');
-  const greeting = name ? `<p style="color:var(--text-soft);font-size:14px;margin-bottom:16px">Obrigado, <strong>${name}</strong>. Aqui está o teu diagnóstico.</p>` : '';
   el.innerHTML = `
     <div class="fade-in">
-      <div class="result-header">
-        <div class="result-level-label">O teu nível</div>
+      <div class="result-header" style="border-top: 5px solid ${level.color}; border-bottom: 3px solid ${level.color}">
         <div class="result-level-name">${level.name}</div>
-        <div class="result-score-tag">${score} pontos</div>
       </div>
-      ${greeting}
-      <div class="result-tagline">${level.tagline}</div>
+      <div style="margin: 20px 0 24px">
+        <div style="text-align:center;margin-bottom:10px">
+          <span id="result-pct" style="font-size:32px;font-weight:800;color:${level.color};line-height:1">0%</span>
+        </div>
+        <div style="height:12px;background:#eee;border-radius:99px;overflow:hidden">
+          <div id="result-bar" style="height:100%;width:0%;background:${level.color};border-radius:99px;transition:width 2.5s ease"></div>
+        </div>
+      </div>
       <div class="result-narrative">${level.narrative}</div>
       <div class="result-cta-box">
-        <strong>O que fazer a seguir</strong>
         <p>${level.cta}</p>
       </div>
-      <div class="contact-box">
-        <p>Fala connosco</p>
-        <a href="mailto:diogoserrario@gmail.com">diogoserrario@gmail.com</a>
-        <a href="tel:+351912517763">912 517 763</a>
+      <div style="display:flex;gap:12px;margin-top:24px">
+        <a href="https://calendly.com/diogoserrario/30min" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--purple);color:var(--white);font-size:14px;font-weight:700;padding:14px 16px;border-radius:12px;text-decoration:none;text-align:center">Marcar Reunião</a>
+        <a href="tel:+351912517763" style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--gold-dark);color:var(--white);font-size:14px;font-weight:700;padding:14px 16px;border-radius:12px;text-decoration:none;text-align:center">Ligar</a>
       </div>
     </div>
   `;
   show('screen-result');
+  setTimeout(() => {
+    const bar = document.getElementById('result-bar');
+    const numEl = document.getElementById('result-pct');
+    if (bar) bar.style.width = pct + '%';
+    if (numEl) {
+      const duration = 2500;
+      const steps = 60;
+      const increment = pct / steps;
+      let current = 0;
+      const interval = setInterval(() => {
+        current += increment;
+        if (current >= pct) { current = pct; clearInterval(interval); }
+        numEl.textContent = Math.round(current) + '%';
+      }, duration / steps);
+    }
+  }, 50);
 }
 
 // ─────────────────────────────────────────────
@@ -784,3 +771,4 @@ function hide(id) {
 </script>
 </body>
 </html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
